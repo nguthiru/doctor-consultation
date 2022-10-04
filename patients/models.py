@@ -12,7 +12,7 @@ class Patient(models.Model):
     address = models.TextField()
 
     def __str__(self) -> str:
-        return self.user
+        return self.user.username
 
 class Application(models.Model):
 

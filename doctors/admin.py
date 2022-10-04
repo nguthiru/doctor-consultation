@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import Doctor, Specialization
+from .models import *
 # Register your models here.
-admin.site.register([Doctor,Specialization])
+admin.site.register([Doctor,Specialization,Consultation,Ticket])

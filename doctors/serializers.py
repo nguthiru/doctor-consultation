@@ -12,12 +12,11 @@ class DoctorSerializer(ModelSerializer):
         model = Doctor
         extra_kwargs = {'user': {'required': False}}
 
-class DoctorImageSerializer(ModelSerializer):
-    class Meta:
-        fields = '__all__'
-        model = DoctorImage
+
 
 class ConsultationSerializer(ModelSerializer):
+    from patients.serializers import TicketSerializer
+    ticket = TicketSerializer()
     class Meta:
         fields = '__all__'
         model = Consultation
