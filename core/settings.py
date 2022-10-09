@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'rest_auth.registration',
+    'django_extensions',
     'corsheaders',
 
     'accounts',
@@ -142,7 +143,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT =  os.path.join(BASE_DIR, 'static')
 
+AUTH_USER_MODEL = 'accounts.CustomUser'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

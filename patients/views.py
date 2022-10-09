@@ -6,9 +6,9 @@ from rest_framework.response import Response
 
 from doctors.models import Consultation, Doctor
 from doctors.serializers import ConsultationSerializer
-from .models import Application, Patient
+from .models import Application, Patient, Ticket, TicketMedia
 from rest_framework.decorators import api_view,action
-from .serializers import ApplicationSerializer, PatientSerializer
+from .serializers import ApplicationSerializer, PatientSerializer, TicketMediaSerializer
 # Create your views here.
 @api_view(['POST'])
 def register_patient(request):
@@ -54,4 +54,14 @@ class ConsultationViewset(viewsets.ModelViewSet):
         qs = Consultation.objects.filter(ticket__application__patient=patient,ticket__completed=True)
 
         return Response(ConsultationSerializer(qs,many=True).data)
-        
+@api_view(['GET'])
+def get_media(request,id):
+    ticket = get_object_or_404(Ticket,id=id)
+    media = TicketMedia.objects.filter(ticket=ticket)
+    return Response(TicketMediaSerializer(media,many=True).data)
+
+class TicketMediaViewSet(viewsets.ModelViewSet):
+    serializer_class = TicketMediaSerializer
+
+    def get_queryset(self):
+        return TicketMedia.objects.filter(sender=self.request.user)

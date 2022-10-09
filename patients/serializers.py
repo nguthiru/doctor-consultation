@@ -1,7 +1,25 @@
-from email.mime import application
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer,SerializerMethodField
+
+
 from .models import *
 from doctors.serializers import DoctorSerializer
+from doctors.models import Doctor
+class UserSerializer(ModelSerializer):
+
+    profile = SerializerMethodField('get_profile')
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'email', 'first_name', 'last_name','is_doctor','profile')
+
+    def get_profile(self,obj):
+        from patients.serializers import PatientSerializer
+
+        if obj.is_doctor:
+            doctor = Doctor.objects.get(user=obj)
+            return DoctorSerializer(doctor).data
+        else:
+            patient = Patient.objects.get(user=obj)
+            return PatientSerializer(patient).data
 class PatientSerializer(ModelSerializer):
 
     class Meta:
@@ -22,4 +40,11 @@ class TicketSerializer(ModelSerializer):
 
     class Meta:
         model = Ticket
+        fields = '__all__'
+
+class TicketMediaSerializer(ModelSerializer):
+
+    sender = UserSerializer()
+    class Meta:
+        model = TicketMedia
         fields = '__all__'
