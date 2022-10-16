@@ -1,3 +1,4 @@
+from django.forms import URLField
 from rest_framework.serializers import ModelSerializer,SerializerMethodField
 
 
@@ -43,8 +44,12 @@ class TicketSerializer(ModelSerializer):
         fields = '__all__'
 
 class TicketMediaSerializer(ModelSerializer):
-
-    sender = UserSerializer()
+    # file = SerializerMethodField('get_file_url')
+    sender = UserSerializer(read_only=True)
     class Meta:
         model = TicketMedia
         fields = '__all__'
+        extra_kwargs = {'sender':{'required':False}}
+
+    def get_file_url(self,obj):
+         return self.context['request'].build_absolute_uri(obj.file)

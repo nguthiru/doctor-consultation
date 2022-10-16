@@ -58,10 +58,24 @@ class ConsultationViewset(viewsets.ModelViewSet):
 def get_media(request,id):
     ticket = get_object_or_404(Ticket,id=id)
     media = TicketMedia.objects.filter(ticket=ticket)
-    return Response(TicketMediaSerializer(media,many=True).data)
+    return Response(TicketMediaSerializer(media,many=True,context={'request':request}).data)
 
 class TicketMediaViewSet(viewsets.ModelViewSet):
     serializer_class = TicketMediaSerializer
+    def get_serializer_context(self):
+        context = super(TicketMediaViewSet, self).get_serializer_context()
+        context.update({"request": self.request})
+        return context
 
     def get_queryset(self):
         return TicketMedia.objects.filter(sender=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        ticket = TicketMedia(sender=request.user)
+        serializer =TicketMediaSerializer(instance=ticket,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=201)
+        else:
+            return Response(serializer.errors,status=400)
+

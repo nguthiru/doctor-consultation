@@ -31,7 +31,7 @@ class Ticket(models.Model):
 
 class TicketMedia(models.Model):
     ticket = models.ForeignKey(Ticket,on_delete=models.CASCADE)
-    file = models.FileField(upload_to="media")
+    file = models.FileField(max_length=300)
     date_shared = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(User,on_delete=models.CASCADE)
     caption = models.TextField(null=True)

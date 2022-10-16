@@ -15,10 +15,12 @@ class UserSerializer(ModelSerializer):
 
     def get_profile(self,obj):
         from patients.serializers import PatientSerializer
-
-        if obj.is_doctor:
-            doctor = Doctor.objects.get(user=obj)
-            return DoctorSerializer(doctor).data
-        else:
-            patient = Patient.objects.get(user=obj)
-            return PatientSerializer(patient).data
+        try:
+            if obj.is_doctor:
+                doctor = Doctor.objects.get(user=obj)
+                return DoctorSerializer(doctor,context=self.context).data
+            else:
+                patient = Patient.objects.get(user=obj)
+                return PatientSerializer(patient).data
+        except:
+            return {}

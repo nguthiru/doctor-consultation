@@ -19,11 +19,11 @@ class Doctor(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15,unique=True)
-    specialization = models.OneToOneField(Specialization,on_delete=models.CASCADE,null=True)
+    specialization = models.ForeignKey(Specialization,on_delete=models.CASCADE,null=True)
     image = models.ImageField(null=True,upload_to='doctor_images')
 
     def __str__(self) -> str:
-        return self.user.username
+        return f"{self.first_name} {self.last_name}"
 
 class Consultation(models.Model):
     ticket = models.ForeignKey(Ticket,on_delete=models.CASCADE)
