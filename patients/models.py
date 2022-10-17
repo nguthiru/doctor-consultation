@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -19,14 +20,17 @@ class Application(models.Model):
     patient = models.ForeignKey(Patient,on_delete=models.CASCADE)
     date_applied = models.DateTimeField(auto_now_add=True)
     doctor = models.ForeignKey("doctors.Doctor",on_delete=models.CASCADE,null=True)
+    merchantID = models.CharField(max_length=255,null=True,unique=True)
+    checkoutID = models.CharField(max_length=255,null=True,unique=True)
+    pending = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.patient.first_name
 
 class Ticket(models.Model):
-    application = models.ForeignKey(Application,on_delete=models.CASCADE)
+    application = models.OneToOneField(Application,on_delete=models.CASCADE)
     paid = models.BooleanField(default=False)
-    payment_identifier = models.CharField(max_length=100)
+    # payment_identifier = models.CharField(max_length=100)
     completed = models.BooleanField(default=False)
 
 class TicketMedia(models.Model):
