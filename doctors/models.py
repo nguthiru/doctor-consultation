@@ -29,6 +29,7 @@ class Consultation(models.Model):
     ticket = models.ForeignKey(Ticket,on_delete=models.CASCADE)
     diagnosis = models.TextField(null=True,blank=True)
     remarks = models.TextField(null=True,blank=True)
+    prescription = models.TextField(null=True,blank=True)
     date = models.DateTimeField(auto_now_add=True)
 
     

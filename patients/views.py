@@ -54,14 +54,14 @@ class ConsultationViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
         patient = get_object_or_404(Patient, user=self.request.user)
-        return Consultation.objects.filter(ticket__application__patient=patient, ticket__completed=False)
+        return Consultation.objects.filter(ticket__application__patient=patient, ticket__completed=True)
 
     @action(methods=['GET'], detail=False)
     def completed(self, request, *args, **kwargs):
         patient = get_object_or_404(Patient, user=self.request.user)
 
         qs = Consultation.objects.filter(
-            ticket__application__patient=patient, ticket__completed=True)
+            ticket__application__patient=patient, ticket__completed=False)
 
         return Response(ConsultationSerializer(qs, many=True).data)
 
