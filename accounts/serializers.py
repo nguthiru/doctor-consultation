@@ -11,7 +11,7 @@ class UserSerializer(ModelSerializer):
     profile = SerializerMethodField('get_profile')
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'first_name', 'last_name','is_doctor','profile','is_admin')
+        fields = ('id', 'email', 'first_name', 'last_name','is_doctor','profile','is_superuser')
 
     def get_profile(self,obj):
         from patients.serializers import PatientSerializer
