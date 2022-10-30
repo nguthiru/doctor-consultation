@@ -2,11 +2,13 @@ from django.shortcuts import render,get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from patients.models import Ticket, User
+from patients.models import Patient, Ticket, User
 from .models import Consultation, Doctor, Specialization
-from rest_framework.decorators import api_view,action
+from rest_framework.decorators import api_view,action,permission_classes
+from rest_framework.permissions import IsAdminUser
 from .serializers import ConsultationSerializer, DoctorSerializer, SpecializationSerializer
 from django.contrib.auth import get_user
+from django.db.models import DateField, Sum,Count
 # Create your views here.
 @api_view(['POST'])
 def register_doctor(request):
@@ -63,4 +65,21 @@ class ConsultationViewset(viewsets.ModelViewSet):
         ticket.completed = True
         ticket.save()
         return Response(status=200)
-    
+
+@permission_classes([IsAdminUser])
+@api_view(['GET'])
+def report(request):
+    number_of_doctors = Doctor.objects.all().count()
+    patients_under_consultation = Consultation.objects.filter(ticket__completed=True,diagnosis=None).count()
+
+    patients_number = Patient.objects.all().count()
+    diagnosis = Consultation.objects.all().values('diagnosis').annotate(count=Count('id'))
+    special_doctors = Doctor.objects.all().values('specialization','specialization__name').annotate(count=Count('id'))
+
+    return Response(data={
+        'doctors':number_of_doctors,
+        "patients":patients_number,
+        "patients_consult":patients_under_consultation,
+        "diagnosis":diagnosis,
+        "specializations":special_doctors
+    })
