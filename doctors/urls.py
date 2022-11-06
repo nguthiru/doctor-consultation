@@ -10,6 +10,7 @@ router.register('',DoctorViewSet)
 urlpatterns = [
     path('register/',register_doctor,name='register_doctor'),
     path('schedule/',consultation_schedule,name='consultation_schedule'),
+    path('prescription/<int:id>/',consultation_details,name='prescription'),
     path('specialities/',specialities),
     path('report/',report)
 ]+router.urls

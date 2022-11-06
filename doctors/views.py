@@ -59,12 +59,19 @@ class ConsultationViewset(viewsets.ModelViewSet):
         doc = get_object_or_404(Doctor,user=self.request.user)
         return Consultation.objects.filter(ticket__application__doctor=doc,ticket__completed=True)
 
+
     @action(['GET'],detail=True)
     def start(self,request,pk):
         ticket = get_object_or_404(Ticket,id=pk)
         ticket.completed = True
         ticket.save()
         return Response(status=200)
+
+@api_view(['GET'])
+def consultation_details(request,id):
+    consult = get_object_or_404(Consultation,ticket=id)
+
+    return Response(ConsultationSerializer(consult,context={"request": request}).data)
 
 @permission_classes([IsAdminUser])
 @api_view(['GET'])
