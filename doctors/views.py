@@ -6,17 +6,16 @@ from patients.models import Patient, Ticket, User
 from .models import Consultation, Doctor, Specialization
 from rest_framework.decorators import api_view,action,permission_classes
 from rest_framework.permissions import IsAdminUser
-from .serializers import ConsultationSerializer, DoctorSerializer, SpecializationSerializer
+from .serializers import ConsultationSerializer, DoctorSerializer, DoctorWriteSerializer, SpecializationSerializer
 from django.contrib.auth import get_user
 from django.db.models import DateField, Sum,Count
 # Create your views here.
 @api_view(['POST'])
 def register_doctor(request):
     doctor = Doctor(user=request.user)
-    doctor_serial = DoctorSerializer(instance=doctor,data=request.data)
+    doctor_serial = DoctorWriteSerializer(instance=doctor,data=request.data)
     try:
         doc= Doctor.objects.get(user=request.user)
-        print(request.user.is_doctor)
         return Response({'non_field_errors':'doctor already exists'},status=400)
     except Doctor.DoesNotExist:
         if doctor_serial.is_valid():
