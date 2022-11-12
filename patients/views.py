@@ -18,7 +18,7 @@ from .serializers import ApplicationSerializer, PatientSerializer, TicketMediaSe
 @api_view(['POST'])
 def register_patient(request):
     patient = Patient(user=request.user)
-
+    print(request.data)
     patient_serial = PatientSerializer(instance=patient, data=request.data)
 
     if patient_serial.is_valid():
