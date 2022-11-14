@@ -102,7 +102,6 @@ def make_payment(request):
         'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest', headers=headers, json=payload)
 
     if response.status_code <= 210:
-        print(request.user)
         patient = get_object_or_404(Patient, user=request.user)
         data_payment = json.loads(response.text)
         merchantID = data_payment['MerchantRequestID']
@@ -141,7 +140,7 @@ def verify_payment(request):
         application = Application.objects.get(checkoutID=checkoutID)
         response_code = response_data['ResultCode']
         if int(response_code) == 0:
-            Ticket.objects.create(application=Application)
+            Ticket.objects.get_or_create(application=application)
             return Response(status=201)
     return Response(data=response_data, status=400)
 
