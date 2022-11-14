@@ -64,6 +64,7 @@ class ConsultationViewset(viewsets.ModelViewSet):
         ticket = get_object_or_404(Ticket,id=pk)
         ticket.completed = True
         ticket.save()
+        Consultation.objects.create(ticket=ticket)
         return Response(status=200)
 
 @api_view(['GET'])
