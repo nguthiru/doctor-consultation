@@ -8,8 +8,8 @@ import base64
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 class MpesaCredentials:
-    consumer_key = 'RT4PNvGMcJqUUUYnObnnDuX5y3AqJYw3'
-    consumer_secret = 'eEGaBsKs3Ojz85p6'
+    consumer_key = 'EDZXdnQrMlZTRZqlxO6YrP5AZ9WtxBz7'
+    consumer_secret = 'u7cprfmKSHKbCBAR'
     api_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
 
 
@@ -22,6 +22,7 @@ class MpesaAccessToken:
     def getAccessToken(self):
         
         r = requests.get(MpesaCredentials.api_URL, auth=HTTPBasicAuth(MpesaCredentials.consumer_key, MpesaCredentials.consumer_secret))
+        print(r)
         mpesa_access_token = json.loads(r.text)
         validated_mpesa_access_token = mpesa_access_token['access_token']
         self.access_token = validated_mpesa_access_token
